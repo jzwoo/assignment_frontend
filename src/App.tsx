@@ -3,6 +3,7 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Home from "./pages/Home";
 import Missing from "./pages/Missing";
+import RequireAuth from "./components/RequireAuth";
 
 const App: React.FC = () => {
     return (
@@ -13,7 +14,9 @@ const App: React.FC = () => {
                 <Route path="login" element={<Login/>}/>
 
                 {/* protected */}
-                <Route path="home" element={<Home/>}/>
+                <Route element={<RequireAuth/>}>
+                    <Route path="home" element={<Home/>}/>
+                </Route>
 
                 {/* catch all */}
                 <Route path="*" element={<Missing/>}/>
