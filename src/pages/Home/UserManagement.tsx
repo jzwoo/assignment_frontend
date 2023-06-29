@@ -1,10 +1,10 @@
 import React from "react";
+import {Button} from "antd";
 
 const UserManagement: React.FC = () => {
-
     return (
-        <div>
-            This is user management
+        <div style={{padding: "20px"}}>
+            <Button>Add new</Button>
         </div>
     )
 }
