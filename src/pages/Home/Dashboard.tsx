@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Button, Card, Divider, Input, Space, Spin, Table, Tag} from "antd";
 import {axiosUsers} from "../../api/api";
 import {User} from "../../api/types";
+import Spinner from "../../components/Spinner";
 
 const Dashboard: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
@@ -19,7 +20,7 @@ const Dashboard: React.FC = () => {
         }).finally(() => {
             setLoading(false);
         })
-    }
+    };
 
     useEffect(() => {
         getUsers();
@@ -27,7 +28,7 @@ const Dashboard: React.FC = () => {
 
     const clearUsers = () => {
         setUsers([]);
-    }
+    };
 
     const onSearch = (id: string) => {
         setLoading(true);
@@ -49,11 +50,11 @@ const Dashboard: React.FC = () => {
         }).finally(() => {
             setLoading(false);
         })
-    }
+    };
 
     const clearUser = () => {
         setUser(undefined);
-    }
+    };
 
     const columns = [
         {
@@ -72,7 +73,7 @@ const Dashboard: React.FC = () => {
             key: 'role',
         },
         {
-            title: 'Date of Creation',
+            title: 'Datetime created (UTC)',
             dataIndex: 'date_of_creation',
             key: 'date_of_creation',
         },
@@ -91,11 +92,7 @@ const Dashboard: React.FC = () => {
     ];
 
     if (loading) {
-        return (
-            <div style={{height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
-                <Spin/>
-            </div>
-        )
+        return <Spinner/>;
     }
 
     return (
@@ -137,7 +134,7 @@ const Dashboard: React.FC = () => {
                 <p><b>DOC: </b>{user.date_of_creation}</p>
             </Card>}
         </div>
-    )
+    );
 }
 
-export default Dashboard
+export default Dashboard;

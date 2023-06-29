@@ -1,9 +1,10 @@
 import React, {useState} from 'react'
-import {Button, Form, Input, Spin} from "antd";
+import {Button, Form, Input} from "antd";
 import "./Login.css"
 import {axiosUsers} from "../../api/api";
 import useUser from "../../hooks/useUser";
 import {useNavigate} from "react-router-dom";
+import Spinner from "../../components/Spinner";
 
 const Login: React.FC = () => {
     const {setUser} = useUser();
@@ -25,7 +26,7 @@ const Login: React.FC = () => {
     }
 
     if (loading) {
-        return <Spin/>
+        return <Spinner/>;
     }
 
     return (
