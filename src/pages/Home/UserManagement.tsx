@@ -4,6 +4,7 @@ import {User} from "../../api/types";
 import {axiosUsers} from "../../api/api";
 import Spinner from "../../components/Spinner";
 import useUser from "../../hooks/useUser";
+import EditUserModal from "../../components/EditUserModal";
 
 const UserManagement: React.FC = () => {
     const {user} = useUser();
@@ -11,7 +12,10 @@ const UserManagement: React.FC = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
+    const [editUser, setEditUser] = useState<User | undefined>();
+    const [openEditModal, setOpenEditModal] = useState(false);
+
+    const getUsers = () => {
         setLoading(true);
         axiosUsers.get<User[]>("/api/v1/users").then((res) => {
             if (res.status === 200) {
@@ -22,7 +26,23 @@ const UserManagement: React.FC = () => {
         }).finally(() => {
             setLoading(false);
         })
+    };
+
+    useEffect(() => {
+        getUsers();
     }, []);
+
+    const handleOpenEditModal = (user: User) => {
+        setEditUser(user);
+        setOpenEditModal(true);
+    }
+
+    const handleCloseEditModal = (withReload: boolean) => {
+        setEditUser(undefined);
+        setOpenEditModal(false);
+
+        if (withReload) getUsers();
+    }
 
     const columns = [
         {
@@ -62,7 +82,7 @@ const UserManagement: React.FC = () => {
             key: 'action',
             render: (user: User) => (
                 <Space size="middle">
-                    <a>Edit</a>
+                    <a onClick={() => handleOpenEditModal(user)} >Edit</a>
 
                     <Popconfirm title="Confirm delete?" onConfirm={() => deleteUser(user.user_id)}>
                         <a>Delete</a>
@@ -103,6 +123,8 @@ const UserManagement: React.FC = () => {
             <Button type="primary" style={{marginBottom: 20}}>Add new</Button>
 
             <Table columns={columns} dataSource={users} rowKey={(user: User) => user.user_id}/>
+
+            {editUser && <EditUserModal open={openEditModal} handleClose={handleCloseEditModal} editUser={editUser}/>}
         </div>
     )
 }

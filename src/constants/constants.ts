@@ -5,3 +5,9 @@ export const Content = {
     SETTINGS: "Settings",
     LOGOUT: "Log out"
 }
+
+export const Roles = {
+    VIEWER: "Viewer",
+    OPERATOR: "Operator",
+    ADMIN: "Admin"
+}
