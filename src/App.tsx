@@ -1,7 +1,7 @@
 import React from 'react';
 import {Navigate, Route, Routes} from "react-router-dom";
 import Login from "./pages/Login/Login";
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 import Missing from "./pages/Missing";
 import RequireAuth from "./components/RequireAuth";
 
