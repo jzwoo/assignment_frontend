@@ -3,8 +3,11 @@ import {Button, Popconfirm, Space, Table, Tag} from "antd";
 import {User} from "../../api/types";
 import {axiosUsers} from "../../api/api";
 import Spinner from "../../components/Spinner";
+import useUser from "../../hooks/useUser";
 
 const UserManagement: React.FC = () => {
+    const {user} = useUser();
+
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -61,13 +64,35 @@ const UserManagement: React.FC = () => {
                 <Space size="middle">
                     <a>Edit</a>
 
-                    <Popconfirm title="Confirm delete?" onConfirm={() => console.log(user.user_id)}>
+                    <Popconfirm title="Confirm delete?" onConfirm={() => deleteUser(user.user_id)}>
                         <a>Delete</a>
                     </Popconfirm>
                 </Space>
             ),
         },
     ];
+
+    const deleteUser = (userId: number) => {
+        setLoading(true);
+        axiosUsers.delete(`/api/v1/users/${userId}`, {
+            headers: {
+                Authorization: `Bearer ${user.accessToken}`
+            }
+        }).then((res) => {
+            if (res.status === 200) {
+                setUsers(users.filter(user => user.user_id != userId));
+            }
+        }).catch((err) => {
+            const res = err?.res;
+
+            if (res && res.status === 403) {
+                // TODO: do indication for user
+                console.log("Unauthorized");
+            }
+        }).finally(() => {
+            setLoading(false);
+        })
+    };
 
     if (loading) {
         return <Spinner/>;
