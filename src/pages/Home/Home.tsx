@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import useUser from "../../hooks/useUser";
 import {Layout} from "antd";
 import NavigationBar from "../../components/NavigationBar";
 import Profile from "./Profile";
@@ -10,7 +9,6 @@ import Missing from "../Missing";
 import {Content} from "../../constants/constants";
 
 const Home: React.FC = () => {
-    const {user} = useUser();
     const [selected, setSelected] = useState(Content.DASHBOARD);
 
     const showContent = (selected: string) => {
@@ -30,10 +28,6 @@ const Home: React.FC = () => {
 
     return (
         <Layout style={{height: "100vh"}}>
-            <Layout.Header>
-                Welcome {user.name}
-            </Layout.Header>
-
             <Layout>
                 <NavigationBar setSelected={setSelected}/>
 

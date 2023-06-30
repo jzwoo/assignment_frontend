@@ -5,6 +5,7 @@ import {axiosUsers} from "../../api/api";
 import Spinner from "../../components/Spinner";
 import useUser from "../../hooks/useUser";
 import EditUserModal from "../../components/EditUserModal";
+import AddUserModal from "../../components/AddUserModal";
 
 const UserManagement: React.FC = () => {
     const {user} = useUser();
@@ -14,6 +15,8 @@ const UserManagement: React.FC = () => {
 
     const [editUser, setEditUser] = useState<User | undefined>();
     const [openEditModal, setOpenEditModal] = useState(false);
+
+    const [openAddModal, setOpenAddModal] = useState(false);
 
     const getUsers = () => {
         setLoading(true);
@@ -40,6 +43,12 @@ const UserManagement: React.FC = () => {
     const handleCloseEditModal = (withReload: boolean) => {
         setEditUser(undefined);
         setOpenEditModal(false);
+
+        if (withReload) getUsers();
+    }
+
+    const handleCloseAddModal = (withReload: boolean) => {
+        setOpenAddModal(false);
 
         if (withReload) getUsers();
     }
@@ -82,7 +91,7 @@ const UserManagement: React.FC = () => {
             key: 'action',
             render: (user: User) => (
                 <Space size="middle">
-                    <a onClick={() => handleOpenEditModal(user)} >Edit</a>
+                    <a onClick={() => handleOpenEditModal(user)}>Edit</a>
 
                     <Popconfirm title="Confirm delete?" onConfirm={() => deleteUser(user.user_id)}>
                         <a>Delete</a>
@@ -120,11 +129,13 @@ const UserManagement: React.FC = () => {
 
     return (
         <div style={{padding: 20}}>
-            <Button type="primary" style={{marginBottom: 20}}>Add new</Button>
+            <Button type="primary" style={{marginBottom: 20}} onClick={() => setOpenAddModal(true)}>Add new</Button>
 
             <Table columns={columns} dataSource={users} rowKey={(user: User) => user.user_id}/>
 
             {editUser && <EditUserModal open={openEditModal} handleClose={handleCloseEditModal} editUser={editUser}/>}
+
+            {openAddModal && <AddUserModal open={openAddModal} handleClose={handleCloseAddModal}/>}
         </div>
     )
 }
