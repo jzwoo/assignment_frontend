@@ -7,6 +7,8 @@ import {
     FundViewOutlined, LogoutOutlined
 } from "@ant-design/icons";
 import {Content} from "../constants/constants";
+import {useNavigate} from "react-router-dom";
+import useUser from "../hooks/useUser";
 
 interface NavigationBarProps {
     setSelected: (num: string) => void
@@ -14,6 +16,13 @@ interface NavigationBarProps {
 
 const NavigationBar: React.FC<NavigationBarProps> = (props) => {
     const {setSelected} = props
+    const {setUser} = useUser();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        setUser({name: "", accessToken: ""});
+        navigate("/login");
+    }
 
     return (
         <Layout.Sider>
@@ -47,6 +56,7 @@ const NavigationBar: React.FC<NavigationBarProps> = (props) => {
                         key: Content.LOGOUT,
                         icon: <LogoutOutlined/>,
                         label: Content.LOGOUT,
+                        onClick: handleLogout
                     },
                 ]}
             />
