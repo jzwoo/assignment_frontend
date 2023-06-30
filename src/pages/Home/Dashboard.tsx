@@ -3,35 +3,16 @@ import {Button, Card, Divider, Input, Space, Spin, Table, Tag} from "antd";
 import {axiosUsers} from "../../api/api";
 import {User} from "../../api/types";
 import Spinner from "../../components/Spinner";
+import useGetUsers from "../../hooks/useGetUsers";
 
 const Dashboard: React.FC = () => {
-    const [users, setUsers] = useState<User[]>([]);
+    const {users, loading, getUsers, clearUsers} = useGetUsers();
+
     const [user, setUser] = useState<User | undefined>();
-    const [loading, setLoading] = useState(true);
-
-    const getUsers = () => {
-        setLoading(true);
-        axiosUsers.get<User[]>("/api/v1/users").then((res) => {
-            if (res.status === 200) {
-                setUsers(res.data);
-            }
-        }).catch((err) => {
-            console.error(err);
-        }).finally(() => {
-            setLoading(false);
-        })
-    };
-
-    useEffect(() => {
-        getUsers();
-    }, []);
-
-    const clearUsers = () => {
-        setUsers([]);
-    };
+    const [loadingUser, setLoadingUser] = useState(false);
 
     const onSearch = (id: string) => {
-        setLoading(true);
+        setLoadingUser(true);
         axiosUsers.get(`/api/v1/users/${id}`).then((res) => {
             if (res.status === 200) {
                 console.log(res.data);
@@ -48,7 +29,7 @@ const Dashboard: React.FC = () => {
 
             console.error("Not found");
         }).finally(() => {
-            setLoading(false);
+            setLoadingUser(false);
         })
     };
 
@@ -91,7 +72,7 @@ const Dashboard: React.FC = () => {
         },
     ];
 
-    if (loading) {
+    if (loadingUser || loading) {
         return <Spinner/>;
     }
 

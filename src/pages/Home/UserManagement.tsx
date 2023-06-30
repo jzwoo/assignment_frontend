@@ -6,34 +6,16 @@ import Spinner from "../../components/Spinner";
 import useUser from "../../hooks/useUser";
 import EditUserModal from "../../components/EditUserModal";
 import AddUserModal from "../../components/AddUserModal";
+import useGetUsers from "../../hooks/useGetUsers";
 
 const UserManagement: React.FC = () => {
     const {user} = useUser();
-
-    const [users, setUsers] = useState<User[]>([]);
-    const [loading, setLoading] = useState(true);
+    const {users, loading, getUsers} = useGetUsers();
 
     const [editUser, setEditUser] = useState<User | undefined>();
     const [openEditModal, setOpenEditModal] = useState(false);
 
     const [openAddModal, setOpenAddModal] = useState(false);
-
-    const getUsers = () => {
-        setLoading(true);
-        axiosUsers.get<User[]>("/api/v1/users").then((res) => {
-            if (res.status === 200) {
-                setUsers(res.data);
-            }
-        }).catch((err) => {
-            console.error(err);
-        }).finally(() => {
-            setLoading(false);
-        })
-    };
-
-    useEffect(() => {
-        getUsers();
-    }, []);
 
     const handleOpenEditModal = (user: User) => {
         setEditUser(user);
@@ -102,14 +84,13 @@ const UserManagement: React.FC = () => {
     ];
 
     const deleteUser = (userId: number) => {
-        setLoading(true);
         axiosUsers.delete(`/api/v1/users/${userId}`, {
             headers: {
                 Authorization: `Bearer ${user.accessToken}`
             }
         }).then((res) => {
             if (res.status === 200) {
-                setUsers(users.filter(user => user.user_id != userId));
+                getUsers();
             }
         }).catch((err) => {
             const res = err?.res;
@@ -118,8 +99,6 @@ const UserManagement: React.FC = () => {
                 // TODO: do indication for user
                 console.log("Unauthorized");
             }
-        }).finally(() => {
-            setLoading(false);
         })
     };
 
