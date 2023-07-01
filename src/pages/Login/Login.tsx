@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Button, Form, Input} from "antd";
+import {Button, Form, Input, message} from "antd";
 import "./Login.css"
 import {axiosUsers} from "../../api/api";
 import useUser from "../../hooks/useUser";
@@ -16,17 +16,22 @@ const Login: React.FC = () => {
         axiosUsers.post("/login", formValues).then((res) => {
             if (res.status === 200) {
                 setUser(res.data);
+                message.success("Logging in.").then();
                 navigate("/home")
             }
-        }).catch((err) => {
-            console.error(err)
+        }).catch(() => {
+            message.error("Wrong username and/or password.").then();
         }).finally(() => {
             setLoading(false);
         })
     }
 
     if (loading) {
-        return <Spinner/>;
+        return (
+            <div style={{height: "100vh"}}>
+                <Spinner/>
+            </div>
+        );
     }
 
     return (

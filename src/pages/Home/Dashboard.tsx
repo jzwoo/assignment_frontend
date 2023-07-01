@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {Button, Card, Divider, Input, Space, Spin, Table, Tag} from "antd";
+import React, {useState} from "react";
+import {Button, Card, Divider, Input, message, Space, Table, Tag} from "antd";
 import {axiosUsers} from "../../api/api";
 import {User} from "../../api/types";
 import Spinner from "../../components/Spinner";
@@ -15,19 +15,18 @@ const Dashboard: React.FC = () => {
         setLoadingUser(true);
         axiosUsers.get(`/api/v1/users/${id}`).then((res) => {
             if (res.status === 200) {
-                console.log(res.data);
                 setUser(res.data);
             }
         }).catch((err) => {
             const res = err?.response;
 
             if (res && res.status === 404) {
-                console.log("Not found");
+                message.error("User not found.").then();
                 setUser(undefined);
                 return;
             }
 
-            console.error("Not found");
+            message.error("Server Error.").then();
         }).finally(() => {
             setLoadingUser(false);
         })

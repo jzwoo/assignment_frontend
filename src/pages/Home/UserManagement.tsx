@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {Button, Popconfirm, Space, Table, Tag} from "antd";
+import React, {useState} from "react";
+import {Button, message, Popconfirm, Space, Table, Tag} from "antd";
 import {User} from "../../api/types";
 import {axiosUsers} from "../../api/api";
 import Spinner from "../../components/Spinner";
@@ -93,11 +93,10 @@ const UserManagement: React.FC = () => {
                 getUsers();
             }
         }).catch((err) => {
-            const res = err?.res;
+            const res = err?.response;
 
             if (res && res.status === 403) {
-                // TODO: do indication for user
-                console.log("Unauthorized");
+                message.error("Unauthorized.").then();
             }
         })
     };

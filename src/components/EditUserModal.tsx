@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Form, Modal, Select, Switch, Typography} from "antd";
+import {Form, message, Modal, Select, Switch} from "antd";
 import {User} from "../api/types";
 import {Roles} from "../constants/constants";
 import useUser from "../hooks/useUser";
@@ -29,11 +29,10 @@ const EditUserModal: React.FC<EditUserModalProps> = (props) => {
                 handleClose(true);
             }
         }).catch((err) => {
-            const res = err?.res;
+            const res = err?.response;
 
             if (res && res.status === 403) {
-                // TODO: do indication for user
-                console.log("Unauthorized");
+                message.error("Unauthorized.").then();
             }
         }).finally(() => {
             setLoading(false);

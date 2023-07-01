@@ -6,7 +6,7 @@ const RequireAuth: React.FC = () => {
     const {user} = useUser();
 
     return (
-        user.name ? <Outlet/> : <Navigate to="/login"/>
+        user.accessToken ? <Outlet/> : <Navigate to="/login"/>
     )
 }
 
