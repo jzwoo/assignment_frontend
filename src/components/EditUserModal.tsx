@@ -2,8 +2,7 @@ import React, {useState} from "react";
 import {Form, message, Modal, Select, Switch} from "antd";
 import {User} from "../api/types";
 import {Roles} from "../constants/constants";
-import useUser from "../hooks/useUser";
-import {axiosUsers} from "../api/api";
+import useAxiosUsersPrivate from "../hooks/useAxiosUsersPrivate";
 
 interface EditUserModalProps {
     open: boolean;
@@ -13,17 +12,13 @@ interface EditUserModalProps {
 
 const EditUserModal: React.FC<EditUserModalProps> = (props) => {
     const [form] = Form.useForm();
-    const {user} = useUser();
     const {open, handleClose, editUser} = props;
+    const axiosUsersPrivate = useAxiosUsersPrivate();
 
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = (formValues: {}) => {
-        axiosUsers.put(`/api/v1/users/${editUser.user_id}`, formValues, {
-            headers: {
-                Authorization: `Bearer ${user.accessToken}`
-            }
-        }).then((res) => {
+        axiosUsersPrivate.put(`/api/v1/users/${editUser.user_id}`, formValues).then((res) => {
             if (res.status === 200) {
                 setLoading(false);
                 handleClose(true);

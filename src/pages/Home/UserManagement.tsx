@@ -1,16 +1,15 @@
 import React, {useState} from "react";
 import {Button, message, Popconfirm, Space, Table, Tag} from "antd";
 import {User} from "../../api/types";
-import {axiosUsers} from "../../api/api";
 import Spinner from "../../components/Spinner";
-import useUser from "../../hooks/useUser";
 import EditUserModal from "../../components/EditUserModal";
 import AddUserModal from "../../components/AddUserModal";
 import useGetUsers from "../../hooks/useGetUsers";
+import useAxiosUsersPrivate from "../../hooks/useAxiosUsersPrivate";
 
 const UserManagement: React.FC = () => {
-    const {user} = useUser();
     const {users, loading, getUsers} = useGetUsers();
+    const axiosUsersPrivate = useAxiosUsersPrivate();
 
     const [editUser, setEditUser] = useState<User | undefined>();
     const [openEditModal, setOpenEditModal] = useState(false);
@@ -84,11 +83,7 @@ const UserManagement: React.FC = () => {
     ];
 
     const deleteUser = (userId: number) => {
-        axiosUsers.delete(`/api/v1/users/${userId}`, {
-            headers: {
-                Authorization: `Bearer ${user.accessToken}`
-            }
-        }).then((res) => {
+        axiosUsersPrivate.delete(`/api/v1/users/${userId}`).then((res) => {
             if (res.status === 200) {
                 getUsers();
             }

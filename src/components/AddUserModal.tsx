@@ -1,8 +1,7 @@
 import React, {useState} from "react";
 import {Form, Input, message, Modal, Select, Switch} from "antd";
 import {Roles} from "../constants/constants";
-import useUser from "../hooks/useUser";
-import {axiosUsers} from "../api/api";
+import useAxiosUsersPrivate from "../hooks/useAxiosUsersPrivate";
 
 interface AddUserModalProps {
     open: boolean;
@@ -11,18 +10,14 @@ interface AddUserModalProps {
 
 const AddUserModal: React.FC<AddUserModalProps> = (props) => {
     const [form] = Form.useForm();
-    const {user} = useUser();
     const {open, handleClose} = props;
+    const axiosUsersPrivate = useAxiosUsersPrivate();
 
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = (formValues: {}) => {
         setLoading(true);
-        axiosUsers.post("/api/v1/users", formValues, {
-            headers: {
-                Authorization: `Bearer ${user.accessToken}`
-            }
-        }).then((res) => {
+        axiosUsersPrivate.post("/api/v1/users", formValues).then((res) => {
             if (res.status === 201) {
                 setLoading(false);
                 handleClose(true);
@@ -43,7 +38,7 @@ const AddUserModal: React.FC<AddUserModalProps> = (props) => {
             open={open}
             title={
                 <b>
-                    {`Adding a new user`}
+                    Adding a new user
                 </b>
             }
             onOk={form.submit}
